@@ -428,8 +428,39 @@ public class FileServiceImpl implements FileService {
                         }
 //                        card.setTimeOutEnd(String.valueOf(cell.getStringCellValue()));
                     } else if (k == 9) { // 累计小时数
-                        BigDecimal val = new BigDecimal(cell.getNumericCellValue());
+
+//                        log.info(card.toString());
+
+//                        try {
+
+                        BigDecimal val;
+                        switch (cell.getCellTypeEnum()) {
+                            case NUMERIC:
+//                                int numericCellValue = (int) cell.getNumericCellValue();
+//                                value += numericCellValue + ",";
+                                val = new BigDecimal(cell.getNumericCellValue());
+                                card.setTimeLength(val.floatValue());
+                                break;
+                            case STRING:
+//                                String stringCellValue = cell.getStringCellValue();
+//                                value += stringCellValue + ",";
+                                val = new BigDecimal(cell.getStringCellValue());
+                                break;
+                            case BLANK:
+                                val = new BigDecimal("1000000000000000");
+                                card.setDescription("累计小时数格式错误");
+                                break;
+                            default:
+                                val = new BigDecimal("1000000000000000");
+                                card.setDescription("累计小时数格式错误");
+                                break;
+                        }
                         card.setTimeLength(val.floatValue());
+
+//                        } catch (Exception e) {
+//                            log.error(e.getMessage());
+//                        }
+
 //                    } else if (k == 10) { // 申请日期
 //                        card.set(cell.getStringCellValue());
                     } else if (k == 11) { // 明细
@@ -440,7 +471,7 @@ public class FileServiceImpl implements FileService {
                 card.setStartDateStr(card.getTimeOutDateStart() + " " + card.getTimeOutStart());
                 card.setStartDate(DateUtil.smartFormat(card.getStartDateStr()));
                 card.setEndDateStr(card.getTimeOutDateEnd() + " " + card.getTimeOutEnd());
-                log.info(card.getEndDateStr());
+                log.info(card.toString());
                 card.setEndDate(DateUtil.smartFormat(card.getEndDateStr()));
 
                 cardList.add(card);
